@@ -17,8 +17,6 @@ func main() {
 	//log.SetOutput(io.Discard)
 
 	verticesAmountPTR := flag.Int("vertices", 10, "Number of vertices")
-	mtThreadsPowTwoStartPTR := flag.Int("mt-threads-powers-of-two-start", 2, "for example 2^2 threads")
-	mtThreadsPowMultPTR := flag.Int("mt-threads-powers-of-two-mult", 1, "for example 2^2 threads then 2^3 threads to 2^n threads")
 
 	logToFilePTR := flag.Bool("log-to-file", false, "Log to file")
 	flag.Parse()
@@ -51,30 +49,19 @@ func main() {
 	//if err1 != nil {
 	//	return
 	//}
-	graph.GenerateRandomGraph(g, *verticesAmountPTR, -1, 1000)
+	graph.GenerateRandomGraph(g, *verticesAmountPTR, -1, 100)
 
 	times := make([]int64, 0)
 
 	// Wywołanie algorytmu brute force dla problemu TSP
 	startVertex := 0
-	minCostBF, bestPathBF := graph.TSPBruteForce(g, startVertex, &times)
-	minCostBFMT, bestPathBFMT := []int{}, [][]int{}
-	for i := *mtThreadsPowTwoStartPTR; i < *mtThreadsPowTwoStartPTR+*mtThreadsPowMultPTR; i++ {
-		for j := 1; j <= 4; j++ {
-			minCostBFMTTMP, bestPathBFMTTMP := graph.TSPBruteForceMT(g, startVertex, &times, 1<<uint(i), j)
-			minCostBFMT = append(minCostBFMT, minCostBFMTTMP)
-			bestPathBFMT = append(bestPathBFMT, bestPathBFMTTMP)
-		}
-	}
 	minCostBNB, bestPathBNB := graph.TSPBranchAndBound(g, startVertex, &times)
 	minCostDP, bestPathDP := graph.TSPDynamicProgramming(g, startVertex, &times)
+	minCostBF, bestPathBF := graph.TSPBruteForce(g, startVertex, &times)
 
 	log.Println(times)
 
 	log.Printf("Brute force: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostBF, g.PathWithWeightsToString(bestPathBF))
-	for i := 0; i < len(minCostBFMT); i++ {
-		log.Printf("Brute force MT: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostBFMT[i], g.PathWithWeightsToString(bestPathBFMT[i]))
-	}
 	log.Printf("Branch and bound: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostBNB, g.PathWithWeightsToString(bestPathBNB))
 	log.Printf("Dynamic programming: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostDP, g.PathWithWeightsToString(bestPathDP))
 	log.Println(g.ToString())
