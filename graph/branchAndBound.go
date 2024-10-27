@@ -30,9 +30,10 @@ func TSPBranchAndBound(g Graph, startVertex int, times *[]int64) (int, []int) {
 	log.Println("Rozpoczęcie Branch and Bound dla wierzchołka początkowego:", startVertex)
 
 	// Rozpocznij procedurę Branch and Bound
-	branchAndBound(g, startVertex, 1, 0, visited, &minPathCost, currentPath, make([]int, vertexCount+1))
+	bestPath := make([]int, vertexCount+1)
+	branchAndBound(g, startVertex, 1, 0, visited, &minPathCost, currentPath, bestPath)
 
-	return minPathCost, currentPath
+	return minPathCost, bestPath
 }
 
 // Funkcja Branch and Bound do przeszukiwania możliwych ścieżek
@@ -54,8 +55,12 @@ func branchAndBound(g Graph, currentVertex, level, currentCost int, visited []bo
 			// Aktualizuj najlepszą ścieżkę, jeśli koszt jest niższy
 			if totalCost < *minPathCost {
 				*minPathCost = totalCost
+
+				// Kopiujemy aktualną ścieżkę do najlepszej ścieżki
 				copy(bestPath, currentPath)
-				bestPath[vertexCount] = currentPath[0] // Powrót do startowego wierzchołka
+
+				// Dodajemy na końcu wierzchołek początkowy, aby utworzyć pełny cykl
+				bestPath[vertexCount] = currentPath[0]
 
 				// Logujemy znalezienie nowej lepszej ścieżki
 				log.Println("Znaleziono nową lepszą ścieżkę o koszcie:", totalCost, "Ścieżka:", bestPath)

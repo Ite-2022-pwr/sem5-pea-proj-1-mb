@@ -21,10 +21,13 @@ func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int
 
 	// Tworzenie mapy przechowującej koszty częściowych rozwiązań
 	memo := make([][]int, vertexCount)
+	parent := make([][]int, vertexCount) // Dodatkowa tablica, aby zapamiętać, skąd przychodzimy
 	for i := range memo {
 		memo[i] = make([]int, 1<<vertexCount)
+		parent[i] = make([]int, 1<<vertexCount) // Inicjalizacja ścieżki (skąd przychodzimy)
 		for j := range memo[i] {
 			memo[i][j] = math.MaxInt // Inicjalizacja maksymalnym kosztem
+			parent[i][j] = -1        // Brak poprzedniego wierzchołka (na początku)
 		}
 	}
 
@@ -62,6 +65,7 @@ func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int
 				newCost := memo[prevVertex][previousSubset] + edge.Weight
 				if newCost < memo[currentVertex][subset] {
 					memo[currentVertex][subset] = newCost
+					parent[currentVertex][subset] = prevVertex // Zapamiętujemy poprzednika
 					log.Println("Aktualizacja kosztu dla podzbioru:", subset, "i wierzchołka:", currentVertex, "Nowy koszt:", newCost)
 				}
 			}
@@ -97,33 +101,19 @@ func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int
 		return -1, nil // Jeśli nie znaleziono żadnej ścieżki
 	}
 
-	bestPath := []int{startVertex}
-	currentSubset := allVisited
+	bestPath := []int{}
 	currentVertex := lastVertex
+	currentSubset := allVisited
 
-	for currentVertex != startVertex {
-		bestPath = append(bestPath, currentVertex)
-		previousSubset := currentSubset ^ (1 << currentVertex)
-
-		// Znajdujemy poprzedni wierzchołek na podstawie zapamiętanych kosztów
-		for prevVertex := 0; prevVertex < vertexCount; prevVertex++ {
-			if (previousSubset & (1 << prevVertex)) == 0 {
-				continue
-			}
-
-			if memo[prevVertex][previousSubset] == math.MaxInt {
-				continue
-			}
-
-			if memo[prevVertex][previousSubset]+g.GetEdge(prevVertex, currentVertex).Weight == memo[currentVertex][currentSubset] {
-				currentVertex = prevVertex
-				currentSubset = previousSubset
-				break
-			}
-		}
+	// Odtwarzanie trasy na podstawie zapisanych poprzedników
+	for currentVertex != -1 {
+		bestPath = append([]int{currentVertex}, bestPath...)
+		nextVertex := parent[currentVertex][currentSubset]
+		currentSubset ^= (1 << currentVertex)
+		currentVertex = nextVertex
 	}
 
-	// Dodajemy wierzchołek startowy na koniec trasy, aby wrócić do punktu startu
+	// Dodajemy wierzchołek startowy na końcu trasy, aby utworzyć cykl
 	bestPath = append(bestPath, startVertex)
 
 	log.Println("Znaleziono najlepszą ścieżkę o koszcie:", minCost, "Ścieżka:", bestPath)
