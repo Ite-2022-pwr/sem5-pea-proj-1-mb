@@ -115,6 +115,15 @@ func (a *AdjMatrixGraph) CalculatePathWeight(path []int) int {
 	return weight
 }
 
+func (a *AdjMatrixGraph) PathWithWeightsToString(path []int) string {
+	var out strings.Builder
+	for i := 0; i < len(path)-1; i++ {
+		out.WriteString("v" + strconv.Itoa(path[i]) + "--(" + strconv.Itoa(a.adjMatrix[path[i]][path[i+1]]) + ")-->")
+	}
+	out.WriteString("v" + strconv.Itoa(path[len(path)-1]))
+	return out.String()
+}
+
 func (a *AdjMatrixGraph) ToString() string {
 	var out strings.Builder
 

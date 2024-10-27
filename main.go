@@ -7,22 +7,33 @@ import (
 
 // Przykład użycia
 func main() {
-	// Tworzenie grafu o 4 wierzchołkach z wartością -1 dla braku krawędzi
+
+	// wyłączenie logów
+	//log.SetOutput(ioutil.Discard)
+
+	// Tworzenie grafu pustego
 	g := new(graph.AdjMatrixGraph)
 
-	graph.GenerateRandomGraph(g, 10, -1, 50)
+	// Wczytanie grafu z pliku
+	//err := graph.LoadGraphFromFile("17.txt", g)
+	//if err != nil {
+	//	return
+	//}
+	graph.GenerateRandomGraph(g, 5, -1, 10)
 
 	times := make([]int64, 0)
 
 	// Wywołanie algorytmu brute force dla problemu TSP
 	startVertex := 0
-	minCost, bestPath := graph.TSPBruteForce(g, startVertex, &times)
+	minCostBF, bestPathBF := graph.TSPBruteForce(g, startVertex, &times)
+	minCostBNB, bestPathBNB := graph.TSPBranchAndBound(g, startVertex, &times)
+	minCostDP, bestPathDP := graph.TSPDynamicProgramming(g, startVertex, &times)
 
 	fmt.Println(times)
 
-	fmt.Printf("Minimalny koszt trasy: %d\n", minCost)
-	fmt.Printf("Najlepsza trasa: %v\n", bestPath)
-
+	fmt.Printf("Brute force: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostBF, g.PathWithWeightsToString(bestPathBF))
+	fmt.Printf("Branch and bound: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostBNB, g.PathWithWeightsToString(bestPathBNB))
+	fmt.Printf("Dynamic programming: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostDP, g.PathWithWeightsToString(bestPathDP))
 	fmt.Println(g.ToString())
 
 	err := graph.SaveGraphToFile(g, "test2.txt")

@@ -13,5 +13,6 @@ type Graph interface {
 	RemoveEdge(startVertex, endVertex int)
 	IsAdjacent(startVertex, endVertex int) bool
 	CalculatePathWeight(path []int) int
+	PathWithWeightsToString(path []int) string
 	ToString() string
 }
