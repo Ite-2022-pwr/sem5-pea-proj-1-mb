@@ -66,7 +66,6 @@ func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int
 				if newCost < memo[currentVertex][subset] {
 					memo[currentVertex][subset] = newCost
 					parent[currentVertex][subset] = prevVertex // Zapamiętujemy poprzednika
-					log.Println("Aktualizacja kosztu dla podzbioru:", subset, "i wierzchołka:", currentVertex, "Nowy koszt:", newCost)
 				}
 			}
 		}
@@ -93,7 +92,6 @@ func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int
 			minCost = totalCost
 			lastVertex = vertex
 		}
-		log.Println("Sprawdzono koszt powrotu z wierzchołka:", vertex, "Koszt całkowity:", totalCost)
 	}
 
 	// Odtwarzanie najlepszej ścieżki

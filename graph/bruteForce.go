@@ -56,7 +56,7 @@ func permuteRecursive(vertices []int, l int, callback func([]int), permutations 
 	if l == len(vertices)-1 {
 		*permutations++
 		if *permutations%1000 == 0 {
-			log.Println("Utworzono permutację:", *permutations) // Logowanie utworzenia nowej permutacji
+			//log.Println("Utworzono permutację:", *permutations) // Logowanie utworzenia nowej permutacji
 		}
 		callback(append([]int{}, vertices...)) // Tworzenie kopii permutacji
 	} else {
@@ -78,7 +78,7 @@ func updateBestPath(g Graph, startVertex int, permutation []int, minPathCost *in
 
 	// Sprawdzanie, czy znaleziono trasę o niższym koszcie
 	if pathCost < *minPathCost {
-		log.Println("Znaleziono nową najlepszą trasę o koszcie:", pathCost, "\nŚcieżka:", path) // Logowanie nowej lepszej trasy
+		//log.Println("Znaleziono nową najlepszą trasę o koszcie:", pathCost, "\nŚcieżka:", path) // Logowanie nowej lepszej trasy
 		*minPathCost = pathCost
 		*bestPath = append([]int{}, path...) // Kopiowanie najlepszej trasy
 	}

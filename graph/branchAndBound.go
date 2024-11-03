@@ -41,9 +41,7 @@ func branchAndBound(g Graph, currentVertex, level, currentCost int, visited []bo
 	vertexCount := g.GetVertexCount()
 
 	// Logujemy rozpoczęcie przeszukiwania dla nowego poziomu
-	if level%3 == 0 { // Loguj co trzeci poziom, aby nie zbyt często
-		log.Println("Przeszukiwanie na poziomie:", level, "Aktualny wierzchołek:", currentVertex, "Aktualny koszt:", currentCost)
-	}
+	//log.Println("Przeszukiwanie na poziomie:", level, "Aktualny wierzchołek:", currentVertex, "Aktualny koszt:", currentCost)
 
 	// Jeśli osiągnęliśmy poziom równy liczbie wierzchołków, sprawdzamy połączenie powrotne
 	if level == vertexCount {
@@ -63,7 +61,7 @@ func branchAndBound(g Graph, currentVertex, level, currentCost int, visited []bo
 				bestPath[vertexCount] = currentPath[0]
 
 				// Logujemy znalezienie nowej lepszej ścieżki
-				log.Println("Znaleziono nową lepszą ścieżkę o koszcie:", totalCost, "Ścieżka:", bestPath)
+				//log.Println("Znaleziono nową lepszą ścieżkę o koszcie:", totalCost, "Ścieżka:", bestPath)
 			}
 		}
 		return
@@ -90,5 +88,6 @@ func branchAndBound(g Graph, currentVertex, level, currentCost int, visited []bo
 				visited[nextVertex] = false
 			}
 		}
+		//runtime.GC()
 	}
 }
