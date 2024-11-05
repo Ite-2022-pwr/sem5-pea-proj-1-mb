@@ -13,7 +13,7 @@ func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int
 	// Mierzenie czasu rozpoczęcia funkcji
 	startTime := time.Now()
 	defer func() {
-		*times = append(*times, timeTrack.TimeTrack(startTime, "dynamic programming, number of vertices: "+strconv.Itoa(g.GetVertexCount())))
+		*times = append(*times, timeTrack.TimeTrack(startTime, "dynamic programming, liczba wierzchołków: "+strconv.Itoa(g.GetVertexCount())))
 	}()
 
 	vertexCount := g.GetVertexCount()
