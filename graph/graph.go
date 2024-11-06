@@ -9,6 +9,7 @@ type Graph interface {
 	GetEdgesFromVertex(startVertex int) []Edge
 	GetEdgesToVertex(endVertex int) []Edge
 	GetEdge(startVertex, endVertex int) Edge
+	GetMinEdgeFromWeight(vertex int) int
 	AddEdge(startVertex, endVertex, weight int)
 	RemoveEdge(startVertex, endVertex int)
 	IsAdjacent(startVertex, endVertex int) bool

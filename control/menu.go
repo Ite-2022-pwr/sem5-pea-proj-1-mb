@@ -16,7 +16,8 @@ func Menu() {
 		fmt.Println("5. Algorytm Branch and Bound")
 		fmt.Println("6. Algorytm Brute Force")
 		fmt.Println("7. Zapisz graf do pliku")
-		fmt.Println("8. Wyjście")
+		fmt.Println("8. Ustaw wartość braku krawędzi")
+		fmt.Println("9. Wyjście")
 		fmt.Print("Wybierz opcję: ")
 
 		var choice int
@@ -45,6 +46,7 @@ func Menu() {
 			}
 			graph.GenerateRandomGraph(g, vertexCount, -1, 100)
 		case 3:
+			fmt.Printf("wartość braku krawędzi: %d\n", g.GetNoEdgeValue())
 			fmt.Println(g.ToString())
 		case 4:
 			startVertex := 0
@@ -76,6 +78,14 @@ func Menu() {
 				fmt.Println(err)
 			}
 		case 8:
+			fmt.Println("Podaj wartość braku krawędzi")
+			var noEdgeValue int
+			_, err := fmt.Scanln(&noEdgeValue)
+			if err != nil {
+				return
+			}
+			g.SetNoEdgeValue(noEdgeValue)
+		case 9:
 			return
 		default:
 			fmt.Println("Niepoprawna opcja")

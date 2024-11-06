@@ -93,6 +93,16 @@ func (a *AdjMatrixGraph) GetEdge(startVertex, endVertex int) Edge {
 	return Edge{StartVertex: 0, EndVertex: 0, Weight: 0}
 }
 
+func (a *AdjMatrixGraph) GetMinEdgeFromWeight(vertex int) int {
+	minEdge := a.noEdgeValue
+	for i := 0; i < a.GetVertexCount(); i++ {
+		if a.adjMatrix[vertex][i] < minEdge && a.adjMatrix[vertex][i] != a.noEdgeValue {
+			minEdge = a.adjMatrix[vertex][i]
+		}
+	}
+	return minEdge
+}
+
 func (a *AdjMatrixGraph) AddEdge(startVertex, endVertex, weight int) {
 	a.adjMatrix[startVertex][endVertex] = weight
 	a.edgeCount += 1
