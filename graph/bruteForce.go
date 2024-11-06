@@ -55,9 +55,9 @@ func permute(vertices []int, callback func([]int), permutations *int) {
 func permuteRecursive(vertices []int, l int, callback func([]int), permutations *int) {
 	if l == len(vertices)-1 {
 		*permutations++
-		if *permutations%1000 == 0 {
-			//log.Println("Utworzono permutację:", *permutations) // Logowanie utworzenia nowej permutacji
-		}
+		//if *permutations%1000 == 0 {
+		//	//log.Println("Utworzono permutację:", *permutations) // Logowanie utworzenia nowej permutacji
+		//}
 		callback(append([]int{}, vertices...)) // Tworzenie kopii permutacji
 	} else {
 		for i := l; i < len(vertices); i++ {

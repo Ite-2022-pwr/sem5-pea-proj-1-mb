@@ -18,12 +18,15 @@ func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int
 
 	vertexCount := g.GetVertexCount()
 	allVisited := (1 << vertexCount) - 1 // Maskowanie dla wszystkich wierzchołków odwiedzonych
+	// np. dla 4 wierzchołków: 1111 (czyli 15)
+	// bo 1 << 4 = 10000, a 10000 - 1 = 1111
+	// gdzie każdy bit odpowiada jednemu wierzchołkowi
 
 	// Tworzenie mapy przechowującej koszty częściowych rozwiązań
 	memo := make([][]int, vertexCount)
 	parent := make([][]int, vertexCount) // Dodatkowa tablica, aby zapamiętać, skąd przychodzimy
 	for i := range memo {
-		memo[i] = make([]int, 1<<vertexCount)
+		memo[i] = make([]int, 1<<vertexCount)   // np dla 4 wierzchołków 16 (2^4) bo od 0000 do 1111
 		parent[i] = make([]int, 1<<vertexCount) // Inicjalizacja ścieżki (skąd przychodzimy)
 		for j := range memo[i] {
 			memo[i][j] = math.MaxInt // Inicjalizacja maksymalnym kosztem
@@ -42,7 +45,7 @@ func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int
 
 		for currentVertex := 0; currentVertex < vertexCount; currentVertex++ {
 			if (subset&(1<<currentVertex)) == 0 || currentVertex == startVertex {
-				continue // Pomijamy wierzchołki, które nie są w bieżącym podzbiorze
+				continue // Pomijamy wierzchołki, które nie są w bieżącym podzbiorze, lub są wierzchołkiem startowym
 			}
 
 			previousSubset := subset ^ (1 << currentVertex) // Podzbiór bez bieżącego wierzchołka
