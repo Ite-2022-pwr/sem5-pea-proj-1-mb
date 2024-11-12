@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"math"
 	"strconv"
 	"strings"
 )
@@ -87,14 +88,11 @@ func (a *AdjMatrixGraph) GetEdgesToVertex(endVertex int) []Edge {
 }
 
 func (a *AdjMatrixGraph) GetEdge(startVertex, endVertex int) Edge {
-	if a.adjMatrix[startVertex][endVertex] != a.noEdgeValue {
-		return Edge{StartVertex: startVertex, EndVertex: endVertex, Weight: a.adjMatrix[startVertex][endVertex]}
-	}
-	return Edge{StartVertex: 0, EndVertex: 0, Weight: 0}
+	return Edge{StartVertex: startVertex, EndVertex: endVertex, Weight: a.adjMatrix[startVertex][endVertex]}
 }
 
 func (a *AdjMatrixGraph) GetMinEdgeFromWeight(vertex int) int {
-	minEdge := a.noEdgeValue
+	minEdge := math.MaxInt
 	for i := 0; i < a.GetVertexCount(); i++ {
 		if a.adjMatrix[vertex][i] < minEdge && a.adjMatrix[vertex][i] != a.noEdgeValue {
 			minEdge = a.adjMatrix[vertex][i]

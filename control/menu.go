@@ -2,6 +2,7 @@ package control
 
 import (
 	"fmt"
+	"log"
 	"projekt1/graph"
 	"projekt1/timeTrack"
 )
@@ -14,10 +15,11 @@ func Menu() {
 		fmt.Println("3. Wyświetl graf")
 		fmt.Println("4. Algorytm dynamiczny")
 		fmt.Println("5. Algorytm Branch and Bound")
-		fmt.Println("6. Algorytm Brute Force")
-		fmt.Println("7. Zapisz graf do pliku")
-		fmt.Println("8. Ustaw wartość braku krawędzi")
-		fmt.Println("9. Wyjście")
+		fmt.Println("6. Algorytm Branch and Bound z nowym sposobem obliczania dolnego ograniczenia")
+		fmt.Println("7. Algorytm Brute Force")
+		fmt.Println("8. Zapisz graf do pliku")
+		fmt.Println("9. Ustaw wartość braku krawędzi")
+		fmt.Println("0. Wyjście")
 		fmt.Print("Wybierz opcję: ")
 
 		var choice int
@@ -58,15 +60,23 @@ func Menu() {
 			startVertex := 0
 			times := make([]int64, 0)
 			minCostBNB, bestPathBNB := graph.TSPBranchAndBound(g, startVertex, &times)
+			log.Println("Ścieżka:", bestPathBNB)
 			fmt.Printf("Branch and bound: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostBNB, g.PathWithWeightsToString(bestPathBNB))
 			fmt.Printf("Czas: %s\n", timeTrack.FormatDurationFromNanoseconds(times[0]))
 		case 6:
 			startVertex := 0
 			times := make([]int64, 0)
+			minCostNBNB, bestPathNBNB := graph.TSPNewBranchAndBound(g, startVertex, &times)
+			log.Println("Ścieżka:", bestPathNBNB)
+			fmt.Printf("Branch and bound: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostNBNB, g.PathWithWeightsToString(bestPathNBNB))
+			fmt.Printf("Czas: %s\n", timeTrack.FormatDurationFromNanoseconds(times[0]))
+		case 7:
+			startVertex := 0
+			times := make([]int64, 0)
 			minCostBF, bestPathBF := graph.TSPBruteForce(g, startVertex, &times)
 			fmt.Printf("Brute force: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostBF, g.PathWithWeightsToString(bestPathBF))
 			fmt.Printf("Czas: %s\n", timeTrack.FormatDurationFromNanoseconds(times[0]))
-		case 7:
+		case 8:
 			fmt.Print("Podaj nazwę pliku: ")
 			var fileName string
 			_, err := fmt.Scanln(&fileName)
@@ -77,7 +87,7 @@ func Menu() {
 			if err != nil {
 				fmt.Println(err)
 			}
-		case 8:
+		case 9:
 			fmt.Println("Podaj wartość braku krawędzi")
 			var noEdgeValue int
 			_, err := fmt.Scanln(&noEdgeValue)
@@ -85,7 +95,7 @@ func Menu() {
 				return
 			}
 			g.SetNoEdgeValue(noEdgeValue)
-		case 9:
+		case 0:
 			return
 		default:
 			fmt.Println("Niepoprawna opcja")

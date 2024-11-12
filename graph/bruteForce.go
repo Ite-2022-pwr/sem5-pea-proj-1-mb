@@ -52,18 +52,18 @@ func permute(vertices []int, callback func([]int), permutations *int) {
 }
 
 // Funkcja pomocnicza do generowania permutacji
-func permuteRecursive(vertices []int, l int, callback func([]int), permutations *int) {
-	if l == len(vertices)-1 {
+func permuteRecursive(vertices []int, level int, callback func([]int), permutations *int) {
+	if level == len(vertices)-1 {
 		*permutations++
 		//if *permutations%1000 == 0 {
 		//	//log.Println("Utworzono permutację:", *permutations) // Logowanie utworzenia nowej permutacji
 		//}
 		callback(append([]int{}, vertices...)) // Tworzenie kopii permutacji
 	} else {
-		for i := l; i < len(vertices); i++ {
-			vertices[l], vertices[i] = vertices[i], vertices[l]
-			permuteRecursive(vertices, l+1, callback, permutations)
-			vertices[l], vertices[i] = vertices[i], vertices[l]
+		for i := level; i < len(vertices); i++ {
+			vertices[level], vertices[i] = vertices[i], vertices[level]
+			permuteRecursive(vertices, level+1, callback, permutations)
+			vertices[level], vertices[i] = vertices[i], vertices[level]
 		}
 	}
 }

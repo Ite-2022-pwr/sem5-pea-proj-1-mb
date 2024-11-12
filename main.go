@@ -48,6 +48,7 @@ func main() {
 	} else {
 		control.RunSingleTest(100, 13, 6, 1, "DP.csv")
 		control.RunSingleTest(100, 13, 6, 2, "BNB.csv")
+		control.RunSingleTest(100, 13, 6, 3, "NBNB.csv")
 		control.RunSingleTest(100, 13, 6, 0, "BF.csv")
 	}
 }

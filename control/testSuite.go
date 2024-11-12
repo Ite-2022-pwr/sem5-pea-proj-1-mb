@@ -30,69 +30,14 @@ func RunSingleTest(roundsForSize, maxSize, minSize, chosenTest int, fileName str
 				_, path = graph.TSPDynamicProgramming(g, startVertex, &times)
 			case 2:
 				_, path = graph.TSPBranchAndBound(g, startVertex, &times)
+			case 3:
+				_, path = graph.TSPNewBranchAndBound(g, startVertex, &times)
 			default:
 				return
 			}
 			log.Println(g.PathWithWeightsToString(path))
 			timesMatrix[size-minSize][round] = times[0]
 			runtime.GC()
-		}
-	}
-	saveTimesToCSVFile(timesMatrix, fileName)
-}
-
-func BNBTests(roundsForSize, maxSize, minSize int, fileName string) {
-	timesMatrix := make([][]int64, maxSize-minSize+1)
-	for i := 0; i < maxSize-minSize+1; i++ {
-		timesMatrix[i] = make([]int64, roundsForSize)
-	}
-
-	for size := minSize; size <= maxSize; size++ {
-		for round := 0; round < roundsForSize; round++ {
-			g := new(graph.AdjMatrixGraph)
-			graph.GenerateRandomGraph(g, size, -1, 100)
-			startVertex := 0
-			times := make([]int64, 0)
-			_, _ = graph.TSPBranchAndBound(g, startVertex, &times)
-			timesMatrix[size-minSize][round] = times[0]
-		}
-	}
-	saveTimesToCSVFile(timesMatrix, fileName)
-}
-
-func DPTests(roundsForSize, maxSize, minSize int, fileName string) {
-	timesMatrix := make([][]int64, maxSize-minSize+1)
-	for i := 0; i < maxSize-minSize+1; i++ {
-		timesMatrix[i] = make([]int64, roundsForSize)
-	}
-
-	for size := minSize; size <= maxSize; size++ {
-		for round := 0; round < roundsForSize; round++ {
-			g := new(graph.AdjMatrixGraph)
-			graph.GenerateRandomGraph(g, size, -1, 100)
-			startVertex := 0
-			times := make([]int64, 0)
-			_, _ = graph.TSPDynamicProgramming(g, startVertex, &times)
-			timesMatrix[size-minSize][round] = times[0]
-		}
-	}
-	saveTimesToCSVFile(timesMatrix, fileName)
-}
-
-func BFTests(roundsForSize, maxSize, minSize int, fileName string) {
-	timesMatrix := make([][]int64, maxSize-minSize+1)
-	for i := 0; i < maxSize-minSize+1; i++ {
-		timesMatrix[i] = make([]int64, roundsForSize)
-	}
-
-	for size := minSize; size <= maxSize; size++ {
-		for round := 0; round < roundsForSize; round++ {
-			g := new(graph.AdjMatrixGraph)
-			graph.GenerateRandomGraph(g, size, -1, 100)
-			startVertex := 0
-			times := make([]int64, 0)
-			_, _ = graph.TSPBruteForce(g, startVertex, &times)
-			timesMatrix[size-minSize][round] = times[0]
 		}
 	}
 	saveTimesToCSVFile(timesMatrix, fileName)
