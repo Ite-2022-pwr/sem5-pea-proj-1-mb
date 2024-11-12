@@ -87,7 +87,6 @@ func newBranchAndBound(g Graph, currentBNBNode BNBNode, visited []bool, minPathC
 			*minPathCost = returnToStartLowerBound
 			// Dodajemy powrót do wierzchołka startowego w aktualnej ścieżce.
 			currentPath = append(currentPath, currentPath[0])
-			log.Println("Znaleziono nowy minimalny koszt:", *minPathCost, "\tŚcieżka:", currentPath)
 			// Kopiujemy aktualną ścieżkę jako najlepszą znalezioną.
 			copy(bestPath, currentPath)
 		}

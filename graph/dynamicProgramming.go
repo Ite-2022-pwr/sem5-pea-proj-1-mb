@@ -16,6 +16,8 @@ func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int
 		*times = append(*times, timeTrack.TimeTrack(startTime, "dynamic programming, liczba wierzchołków: "+strconv.Itoa(g.GetVertexCount())))
 	}()
 
+	log.Println("Rozpoczęcie programowania dynamicznego dla wierzchołka początkowego:", startVertex, "z liczbą wierzchołków:", g.GetVertexCount())
+
 	vertexCount := g.GetVertexCount()
 	allVisited := (1 << vertexCount) - 1 // Maskowanie dla wszystkich wierzchołków odwiedzonych
 	// np. dla 4 wierzchołków: 1111 (czyli 15)
