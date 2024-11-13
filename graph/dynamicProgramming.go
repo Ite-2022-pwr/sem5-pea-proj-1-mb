@@ -10,13 +10,12 @@ import (
 
 // Główna funkcja rozwiązująca problem TSP metodą programowania dynamicznego (Held-Karp)
 func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int) {
+	log.Println("Rozpoczęcie programowania dynamicznego dla wierzchołka początkowego:", startVertex, "z liczbą wierzchołków:", g.GetVertexCount())
 	// Mierzenie czasu rozpoczęcia funkcji
 	startTime := time.Now()
 	defer func() {
 		*times = append(*times, timeTrack.TimeTrack(startTime, "dynamic programming, liczba wierzchołków: "+strconv.Itoa(g.GetVertexCount())))
 	}()
-
-	log.Println("Rozpoczęcie programowania dynamicznego dla wierzchołka początkowego:", startVertex, "z liczbą wierzchołków:", g.GetVertexCount())
 
 	vertexCount := g.GetVertexCount()
 	allVisited := (1 << vertexCount) - 1 // Maskowanie dla wszystkich wierzchołków odwiedzonych
@@ -118,8 +117,6 @@ func TSPDynamicProgramming(g Graph, startVertex int, times *[]int64) (int, []int
 
 	// Dodajemy wierzchołek startowy na końcu trasy, aby utworzyć cykl
 	bestPath = append(bestPath, startVertex)
-
-	log.Println("Znaleziono najlepszą ścieżkę o koszcie:", minCost, "Ścieżka:", bestPath)
 
 	return minCost, bestPath
 }

@@ -54,6 +54,7 @@ func Menu() {
 			startVertex := 0
 			times := make([]int64, 0)
 			minCostDP, bestPathDP := graph.TSPDynamicProgramming(g, startVertex, &times)
+			log.Println("Ścieżka:", bestPathDP)
 			fmt.Printf("Dynamic programming: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostDP, g.PathWithWeightsToString(bestPathDP))
 			fmt.Printf("Czas: %s\n", timeTrack.FormatDurationFromNanoseconds(times[0]))
 		case 5:
@@ -74,6 +75,7 @@ func Menu() {
 			startVertex := 0
 			times := make([]int64, 0)
 			minCostBF, bestPathBF := graph.TSPBruteForce(g, startVertex, &times)
+			log.Println("Ścieżka:", bestPathBF)
 			fmt.Printf("Brute force: minimalny koszt: %d, najlepsza ścieżka: %v\n", minCostBF, g.PathWithWeightsToString(bestPathBF))
 			fmt.Printf("Czas: %s\n", timeTrack.FormatDurationFromNanoseconds(times[0]))
 		case 8:

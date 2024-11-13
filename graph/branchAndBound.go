@@ -10,6 +10,7 @@ import (
 
 // Główna funkcja rozwiązująca problem TSP metodą Branch and Bound
 func TSPBranchAndBound(g Graph, startVertex int, times *[]int64) (int, []int) {
+	log.Println("Rozpoczęcie Branch and Bound dla wierzchołka początkowego:", startVertex, "liczba wierchołków:", g.GetVertexCount())
 	// Mierzenie czasu rozpoczęcia funkcji
 	startTime := time.Now()
 	defer func() {
@@ -26,8 +27,6 @@ func TSPBranchAndBound(g Graph, startVertex int, times *[]int64) (int, []int) {
 	// Startujemy z wierzchołkiem początkowym
 	currentPath[0] = startVertex
 	visited[startVertex] = true
-
-	log.Println("Rozpoczęcie Branch and Bound dla wierzchołka początkowego:", startVertex)
 
 	// Rozpocznij procedurę Branch and Bound
 	bestPath := make([]int, vertexCount+1)

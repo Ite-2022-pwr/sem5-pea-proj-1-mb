@@ -31,14 +31,13 @@ func calculateLowerBound(g Graph, currentBNBNode BNBNode, nextVertex int, minEdg
 
 // Główna funkcja rozwiązująca problem komiwojażera metodą Branch and Bound.
 func TSPNewBranchAndBound(g Graph, startVertex int, times *[]int64) (int, []int) {
+	log.Println("Rozpoczęcie Branch and Bound dla wierzchołka początkowego:", startVertex, "z liczbą wierzchołków:", g.GetVertexCount())
 	startTime := time.Now()
 	defer func() {
 		*times = append(*times, timeTrack.TimeTrack(startTime, "branch and bound, liczba wierzchołków: "+strconv.Itoa(g.GetVertexCount())))
 	}()
 
 	vertexCount := g.GetVertexCount()
-
-	log.Println("Rozpoczęcie Branch and Bound dla wierzchołka początkowego:", startVertex, "z liczbą wierzchołków:", vertexCount)
 
 	// Obliczamy początkowe dolne ograniczenie oraz minimalne koszty krawędzi wychodzących.
 	lowerBound, minEdgeLookup := calculateStartLowerBound(g)
@@ -50,8 +49,6 @@ func TSPNewBranchAndBound(g Graph, startVertex int, times *[]int64) (int, []int)
 
 	// Rozpoczynamy rekurencyjne przeszukiwanie drzewa rozwiązań.
 	newBranchAndBound(g, startNode, visited, &minPathCost, currentPath, bestPath, minEdgeLookup)
-
-	log.Println("Zakończono Branch and Bound dla wierzchołka początkowego:", startVertex, "Minimalny koszt:", minPathCost)
 
 	return minPathCost, bestPath
 }

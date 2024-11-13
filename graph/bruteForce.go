@@ -10,14 +10,13 @@ import (
 
 // Główna funkcja rozwiązująca problem komiwojażera metodą brute-force.
 func TSPBruteForce(g Graph, startVertex int, times *[]int64) (int, []int) {
+	log.Println("Rozpoczęcie Brute-Force dla wierzchołka początkowego:", startVertex, "z liczbą wierzchołków:", g.GetVertexCount())
 	startTime := time.Now()
 	defer func() {
 		*times = append(*times, timeTrack.TimeTrack(startTime, "brute-force, liczba wierzchołków: "+strconv.Itoa(g.GetVertexCount())))
 	}()
 
 	vertexCount := g.GetVertexCount()
-
-	log.Println("Rozpoczęcie Brute-Force dla wierzchołka początkowego:", startVertex, "z liczbą wierzchołków:", vertexCount)
 
 	minPathCost := math.MaxInt             // Inicjalizacja minimalnego kosztu.
 	currentPath := make([]int, 0)          // Aktualna ścieżka.
@@ -30,8 +29,6 @@ func TSPBruteForce(g Graph, startVertex int, times *[]int64) (int, []int) {
 
 	// Rozpoczynamy rekurencyjne przeszukiwanie wszystkich możliwych ścieżek.
 	bruteForce(g, startVertex, visited, 0, &minPathCost, currentPath, bestPath)
-
-	log.Println("Zakończono Brute-Force dla wierzchołka początkowego:", startVertex, "Minimalny koszt:", minPathCost)
 
 	return minPathCost, bestPath
 }
