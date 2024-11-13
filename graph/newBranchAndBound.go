@@ -75,7 +75,7 @@ func newBranchAndBound(g Graph, currentBNBNode BNBNode, visited []bool, minPathC
 		}
 	}
 
-	// Tworzymy kopiec (kolejkę priorytetową) z nieodwiedzonych węzłów, aby zawsze wybierać ten z najniższym dolnym ograniczeniem.
+	// Tworzymy kopiec z nieodwiedzonych węzłów, aby zawsze wybierać ten z najniższym dolnym ograniczeniem.
 	notVisitedBNBNodesHeap := NewBNBNodeHeapByInit(notVisitedBNBNodes)
 
 	// Jeśli nie ma więcej węzłów do odwiedzenia (osiągnięto liść drzewa).

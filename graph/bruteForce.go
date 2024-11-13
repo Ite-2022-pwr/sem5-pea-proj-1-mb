@@ -8,78 +8,74 @@ import (
 	"time"
 )
 
-// Główna funkcja rozwiązująca problem TSP metodą brute force
+// Główna funkcja rozwiązująca problem komiwojażera metodą brute-force.
 func TSPBruteForce(g Graph, startVertex int, times *[]int64) (int, []int) {
-	// Mierzenie czasu rozpoczęcia funkcji
 	startTime := time.Now()
 	defer func() {
-		*times = append(*times, timeTrack.TimeTrack(startTime, "brute force, number of vertices: "+strconv.Itoa(g.GetVertexCount())))
+		*times = append(*times, timeTrack.TimeTrack(startTime, "brute-force, liczba wierzchołków: "+strconv.Itoa(g.GetVertexCount())))
 	}()
 
 	vertexCount := g.GetVertexCount()
 
-	// Log rozpoczęcia przetwarzania metodą brute force
-	log.Println("Rozpoczęcie Brute Force dla wierzchołka początkowego:", startVertex, "z liczba wierzchołków:", vertexCount)
+	log.Println("Rozpoczęcie Brute-Force dla wierzchołka początkowego:", startVertex, "z liczbą wierzchołków:", vertexCount)
 
-	vertices := make([]int, 0)
-	for i := 0; i < vertexCount; i++ {
-		if i != startVertex {
-			vertices = append(vertices, i)
-		}
-	}
+	minPathCost := math.MaxInt             // Inicjalizacja minimalnego kosztu.
+	currentPath := make([]int, 0)          // Aktualna ścieżka.
+	visited := make([]bool, vertexCount)   // Tablica odwiedzonych wierzchołków.
+	bestPath := make([]int, vertexCount+1) // Najlepsza znaleziona ścieżka (z powrotem do startu).
 
-	// Zmienna przechowująca minimalny koszt trasy
-	minPathCost := math.MaxInt
-	var bestPath []int
+	// Oznaczamy wierzchołek początkowy jako odwiedzony i dodajemy go do aktualnej ścieżki.
+	visited[startVertex] = true
+	currentPath = append(currentPath, startVertex)
 
-	permutations := 0
+	// Rozpoczynamy rekurencyjne przeszukiwanie wszystkich możliwych ścieżek.
+	bruteForce(g, startVertex, visited, 0, &minPathCost, currentPath, bestPath)
 
-	// Generowanie wszystkich permutacji wierzchołków
-	permute(vertices, func(permutation []int) {
-		updateBestPath(g, startVertex, permutation, &minPathCost, &bestPath)
-	}, &permutations)
-
-	// Log zakończenia przetwarzania metodą brute force
-	log.Println("Zakończono Brute Force dla wierzchołka początkowego:", startVertex, "Minimalny koszt:", minPathCost)
-	log.Println("Wszystkich permutacji:", permutations)
+	log.Println("Zakończono Brute-Force dla wierzchołka początkowego:", startVertex, "Minimalny koszt:", minPathCost)
 
 	return minPathCost, bestPath
 }
 
-// Funkcja do generowania permutacji z użyciem funkcji callback
-func permute(vertices []int, callback func([]int), permutations *int) {
-	permuteRecursive(vertices, 0, callback, permutations)
-}
+// Rekurencyjna funkcja przeszukująca wszystkie możliwe ścieżki.
+func bruteForce(g Graph, currentVertex int, visited []bool, currentCost int, minPathCost *int, currentPath, bestPath []int) {
+	vertexCount := g.GetVertexCount()
 
-// Funkcja pomocnicza do generowania permutacji
-func permuteRecursive(vertices []int, level int, callback func([]int), permutations *int) {
-	if level == len(vertices)-1 {
-		*permutations++
-		//if *permutations%1000 == 0 {
-		//	//log.Println("Utworzono permutację:", *permutations) // Logowanie utworzenia nowej permutacji
-		//}
-		callback(append([]int{}, vertices...)) // Tworzenie kopii permutacji
-	} else {
-		for i := level; i < len(vertices); i++ {
-			vertices[level], vertices[i] = vertices[i], vertices[level]
-			permuteRecursive(vertices, level+1, callback, permutations)
-			vertices[level], vertices[i] = vertices[i], vertices[level]
+	// Jeśli odwiedziliśmy wszystkie wierzchołki, sprawdzamy powrót do wierzchołka startowego.
+	if len(currentPath) == vertexCount {
+		// Pobieramy krawędź z ostatniego wierzchołka do wierzchołka startowego.
+		edge := g.GetEdge(currentVertex, currentPath[0])
+		if edge.Weight != g.GetNoEdgeValue() {
+			totalCost := currentCost + edge.Weight
+			// Sprawdzamy, czy całkowity koszt jest mniejszy od dotychczasowego minimalnego kosztu.
+			if totalCost < *minPathCost {
+				*minPathCost = totalCost
+				// Tworzymy tymczasową ścieżkę dodając powrót do wierzchołka startowego.
+				tempPath := append(currentPath, currentPath[0])
+				// Kopiujemy aktualną ścieżkę jako najlepszą znalezioną.
+				copy(bestPath, tempPath)
+			}
 		}
+		return
 	}
-}
 
-// Nowa funkcja updateBestPath - używana jako callback w permute
-func updateBestPath(g Graph, startVertex int, permutation []int, minPathCost *int, bestPath *[]int) {
-	// Dodanie wierzchołka początkowego na początku i końcu trasy
-	path := append([]int{startVertex}, append(permutation, startVertex)...)
+	// Przechodzimy przez wszystkie wierzchołki grafu.
+	for nextVertex := 0; nextVertex < vertexCount; nextVertex++ {
+		if !visited[nextVertex] {
+			// Sprawdzamy, czy istnieje krawędź z bieżącego wierzchołka do nextVertex.
+			edge := g.GetEdge(currentVertex, nextVertex)
+			if edge.Weight != g.GetNoEdgeValue() {
+				// Oznaczamy nextVertex jako odwiedzony i dodajemy go do aktualnej ścieżki.
+				visited[nextVertex] = true
+				currentPath = append(currentPath, nextVertex)
+				newCost := currentCost + edge.Weight
 
-	// Obliczenie kosztu ścieżki przy użyciu metody interfejsu Graph
-	pathCost := g.CalculatePathWeight(path)
+				// Rekurencyjne wywołanie dla nextVertex.
+				bruteForce(g, nextVertex, visited, newCost, minPathCost, currentPath, bestPath)
 
-	// Sprawdzanie, czy znaleziono trasę o niższym koszcie
-	if pathCost < *minPathCost {
-		//log.Println("Znaleziono nową najlepszą trasę o koszcie:", pathCost, "\nŚcieżka:", path) // Logowanie nowej lepszej trasy
-		*minPathCost = pathCost
-		*bestPath = append([]int{}, path...) // Kopiowanie najlepszej trasy
+				// Cofamy zmiany (backtracking): usuwamy nextVertex z aktualnej ścieżki i oznaczamy go jako nieodwiedzonego.
+				visited[nextVertex] = false
+				currentPath = currentPath[:len(currentPath)-1]
+			}
+		}
 	}
 }
